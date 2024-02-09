@@ -1,0 +1,39 @@
+﻿@page "/"
+@using System.Text
+
+<PageTitle>Combination Lock</PageTitle>
+
+<div style="text-align:center">
+    <h1>Engel's B-Day Combination Lock</h1>
+    <img src=@lockImage alt="Locked Combination Lock" height="150" />
+    <br/>
+    <br/>
+    <input style="text-align:center" size="5" type="text" maxlength="3" @bind=@input>
+    <br/>
+    <br/>
+    <button class="btn btn-primary" @onclick="ValidateEntry">Try Combination</button>
+</div>
+
+@code {
+
+    private string validHash = "19-15-8C-4A-72-52-E1-21-F7-36-7E-7E-86-A3-BA-AB-BF-93-FD-ED-76-11-00-76-CF-AB-2B-31-EB-7D-F8-87";
+    private string input = "";
+    private string lockImage = "img/LockedLock.png";
+
+    private void ValidateEntry()
+    {        
+        lockImage = "img/LockedLock.png";
+
+        if (input != null)
+        {
+            using HashAlgorithm algo = SHA256.Create();
+            byte[] hashData = algo.ComputeHash(Encoding.ASCII.GetBytes(input));
+            string hash = BitConverter.ToString(hashData);
+
+            if(hash == validHash)
+            {
+                lockImage = "img/UnlockedLock.png";
+            }
+        }        
+    }
+}
